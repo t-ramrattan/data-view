@@ -3,12 +3,12 @@ body {
 }
 
 .Container {
-  width: 800px;
-  text-align: center;
-  background-color:beige;
-  padding:5px;
+  margin: 10px;
+  width: 850px;
+  text-align: center
 }
 
 .Canvas {
+  padding-bottom: 50px;
   background-color: white;
 }

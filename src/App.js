@@ -9,11 +9,12 @@ class App extends React.Component {
     super(props)
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     let svg = d3.select('.Canvas');
+    let padding = 50;
     svg.style('height', this.props.height);
     svg.style('width', this.props.width);
-    
+
     let stats = [
       {
         max: 80,
@@ -39,41 +40,61 @@ class App extends React.Component {
         max: 80,
         min: 30,
         hour: 4
-      }      
+      }
     ];
 
     let yScale = d3.scaleLinear()
-        .domain([d3.max(d => d.max), 0])
-        .range(0, this.props.height)
+      .domain([d3.max(stats, d => d.max), 0])
+      .range([0, this.props.height - padding])
+
+    console.log(yScale(80))
 
     let xBarScale = d3.scaleBand()
-    .domain([0,1,2,3,4])
-    .range([0, this.props.width])
-    .paddingInner(.05)
-    .paddingOuter(.05)
+      .domain([0, 1, 2, 3, 4])
+      .range([0, this.props.width - padding])
+      .padding(.02);
 
-    console.log(xBarScale(1))
+    svg.append('g')
+      .attr('transform', `translate(25,0)`)
+      .selectAll('rect')
+      .data(stats)
+      .enter()
+      .append('rect')
+      .attr('y', d => this.props.height - d.max - padding)
+      .attr('x', d => xBarScale(d.hour))
+      .attr('width', xBarScale.bandwidth())
+      .attr('height', d => d.min)
+      .style('fill', 'none')
+      .style('stroke', 'red')
+      .style('stroke-dasharray', '5,5')
+      .style('stroke-width', 1)
 
+    let xAxisScale = d3.scaleLinear()
+      .domain([0, 5])
+      .range([0, this.props.width - padding])
 
-    svg.selectAll('rect')
-        .data(stats)
-        .enter()
-        .append('rect')
-        .attr('y', d => this.props.height - d.max) 
-        .attr('x', d => xBarScale(d.hour))
-        .attr('width', xBarScale.bandwidth())
-        .attr('height', d => d.min)
-        .style('fill', 'none')
-        .style('stroke', 'red')
-        .style('stroke-width', 1)
+    let yAxis = d3
+      .axisLeft(yScale)
+      .ticks(5);
+
+    let xAxis = d3
+      .axisBottom(xAxisScale)
+      .ticks(5);
     
-    
+    svg.append('g')
+      .call(xAxis)
+      .attr('transform', `translate(25,${parseInt(this.props.height - padding + 5)})`);
+
+    svg.append('g')
+      .call(yAxis)
+      .attr('transform', `translate(25,5)`);
+
   }
 
   render() {
     return (
       <div className="Container">
-        <svg  className='Canvas'/>
+        <svg className='Canvas' />
       </div>
     );
   }
