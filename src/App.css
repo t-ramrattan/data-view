@@ -1,5 +1,6 @@
 body {
   margin: 5px;
+  background-color: #243447;
 }
 
 .Container {
@@ -8,7 +9,16 @@ body {
   text-align: center
 }
 
-.Canvas {
-  padding-bottom: 50px;
-  background-color: white;
+.box {
+  stroke: #c51f5d;
+}
+
+.xAxis {
+  color: #ffffff;
+  font-size: 10pt;
+}
+
+.yAxis {
+  color: #ffffff;
+  font-size: 10pt;
 }

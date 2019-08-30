@@ -11,11 +11,11 @@ class App extends React.Component {
 
   componentDidMount() {
     const svg = d3.select('.Canvas');
-    const padding = 50;
-    const yPadding = 5;
-    const margin = 25;
+    const padding = 40;
+    const yPadding = 10;
+    const margin = 35;
     svg.style('height', this.props.height);
-    svg.style('width', this.props.width);
+    svg.style('width', this.props.width + 5);
 
     let stats = [
       {
@@ -63,12 +63,12 @@ class App extends React.Component {
       .data(stats)
       .enter()
       .append('rect')
+      .attr('class', 'box')
       .attr('y', d => yScale(d.max - yPadding))
       .attr('x', d => xBarScale(d.hour))
       .attr('width', xBarScale.bandwidth())
       .attr('height',d => yScale(maxHeight - (d.max - d.min)))
       .style('fill', 'none')
-      .style('stroke', 'red')
       .style('stroke-width', 1)
       .style('stroke-dasharray', '5,5');
 
@@ -86,11 +86,14 @@ class App extends React.Component {
     
     svg.append('g')
       .call(xAxis)
-      .attr('transform', `translate(25,${parseInt(this.props.height - padding + yPadding)})`);
+      .attr('class', 'xAxis')
+      .attr('transform', `translate(${margin},${parseInt(this.props.height - padding + yPadding + 5)})`);
 
     svg.append('g')
       .call(yAxis)
-      .attr('transform', `translate(${margin},${yPadding})`);
+      .attr('transform', `translate(${margin},${yPadding + 5})`)
+      .attr('class', 'yAxis');
+      ;
 
   }
 
