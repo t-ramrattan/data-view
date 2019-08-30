@@ -10,8 +10,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    let svg = d3.select('.Canvas');
-    let padding = 50;
+    const svg = d3.select('.Canvas');
+    const padding = 50;
+    const yPadding = 5;
+    const margin = 25;
     svg.style('height', this.props.height);
     svg.style('width', this.props.width);
 
@@ -43,8 +45,9 @@ class App extends React.Component {
       }
     ];
 
+    const maxHeight = d3.max(stats, d => d.max);
     let yScale = d3.scaleLinear()
-      .domain([d3.max(stats, d => d.max), 0])
+      .domain([maxHeight, 0])
       .range([0, this.props.height - padding])
 
     console.log(yScale(80))
@@ -55,18 +58,19 @@ class App extends React.Component {
       .padding(.02);
 
     svg.append('g')
-      .attr('transform', `translate(25,0)`)
+      .attr('transform', `translate(${margin},0)`)
       .selectAll('rect')
       .data(stats)
       .enter()
       .append('rect')
-      .attr('y', d => yScale(d.max - 5))
+      .attr('y', d => yScale(d.max - yPadding))
       .attr('x', d => xBarScale(d.hour))
       .attr('width', xBarScale.bandwidth())
-      .attr('height',d => yScale(200 - (d.max - d.min)))
+      .attr('height',d => yScale(maxHeight - (d.max - d.min)))
       .style('fill', 'none')
       .style('stroke', 'red')
       .style('stroke-width', 1)
+      .style('stroke-dasharray', '5,5');
 
     let xAxisScale = d3.scaleLinear()
       .domain([0, 5])
@@ -82,11 +86,11 @@ class App extends React.Component {
     
     svg.append('g')
       .call(xAxis)
-      .attr('transform', `translate(25,${parseInt(this.props.height - padding) + 5})`);
+      .attr('transform', `translate(25,${parseInt(this.props.height - padding + yPadding)})`);
 
     svg.append('g')
       .call(yAxis)
-      .attr('transform', `translate(25,5)`);
+      .attr('transform', `translate(${margin},${yPadding})`);
 
   }
 
