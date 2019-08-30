@@ -23,17 +23,17 @@ class App extends React.Component {
       },
       {
         max: 20,
-        min: 10,
+        min: 0,
         hour: 1
       },
       {
         max: 200,
-        min: 50,
+        min: 120,
         hour: 2
       },
       {
-        max: 150,
-        min: 105,
+        max: 100,
+        min: 85,
         hour: 3
       },
       {
@@ -60,13 +60,12 @@ class App extends React.Component {
       .data(stats)
       .enter()
       .append('rect')
-      .attr('y', d => this.props.height - d.max - padding)
+      .attr('y', d => yScale(d.max - 5))
       .attr('x', d => xBarScale(d.hour))
       .attr('width', xBarScale.bandwidth())
-      .attr('height', d => d.min)
+      .attr('height',d => yScale(200 - (d.max - d.min)))
       .style('fill', 'none')
       .style('stroke', 'red')
-      .style('stroke-dasharray', '5,5')
       .style('stroke-width', 1)
 
     let xAxisScale = d3.scaleLinear()
@@ -75,7 +74,7 @@ class App extends React.Component {
 
     let yAxis = d3
       .axisLeft(yScale)
-      .ticks(5);
+      .ticks(10);
 
     let xAxis = d3
       .axisBottom(xAxisScale)
@@ -83,7 +82,7 @@ class App extends React.Component {
     
     svg.append('g')
       .call(xAxis)
-      .attr('transform', `translate(25,${parseInt(this.props.height - padding + 5)})`);
+      .attr('transform', `translate(25,${parseInt(this.props.height - padding) + 5})`);
 
     svg.append('g')
       .call(yAxis)
